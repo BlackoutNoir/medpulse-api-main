@@ -1,8 +1,12 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
+from dotenv import load_dotenv
+import os 
 
-URL_DATABASE = 'postgresql://postgres:PASS@localhost:5432/MedPulseDB'
+db_url = os.getenv('DATABASE_URL')
+
+URL_DATABASE = db_url
 
 engine = create_engine(URL_DATABASE)
 
