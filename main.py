@@ -1,46 +1,13 @@
 from fastapi import FastAPI
-from pydantic import BaseModel
-from typing import List, Annotated
-import models
-from database import engine, SessionLocal
-from sqlalchemy.orm import Session
-from fastapi import Depends
+from backend.app.api.routes import user  
+from database import engine, Base
+
 
 app = FastAPI()
-models.Base.metadata.create_all(bind=engine)
 
-class ChoiceBase(BaseModel):
-    choice_text: str
-    is_correct: bool
+Base.metadata.create_all(bind=engine)
 
-class QuestionBase(BaseModel):
-    question_text: str
-    choices: List[ChoiceBase]
-
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
-
-db_dependency = Annotated[Session, Depends(get_db)]
-
-@app.post("/questions/")
-async def create_question(question: QuestionBase, db: db_dependency):
-    db_question = models.Questions(question_text=question.question_text)
-    db.add(db_question)
-    db.commit()
-    db.refresh(db_question)
-    for choice in question.choices:
-        db_choice = models.Choices(choice_text=choice.choice_text, is_correct=choice.is_correct, question_id=db_question.id)
-        db.add(db_choice)
-    db.commit()
-    return {"message": "Question created successfully"}
-
-# @app.get("/")
-# def root():
-#     return {"message": "Hello World"}
+app.include_router(user.router, prefix="/api")
 
 
   
