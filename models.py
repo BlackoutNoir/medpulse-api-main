@@ -1,6 +1,6 @@
-import datetime
 import enum
 import uuid
+from datetime import datetime
 from sqlalchemy import Boolean, Column, Date, Float, ForeignKey, Integer, String , DateTime, Table, Enum
 from sqlalchemy.orm import relationship
 from database import Base
@@ -16,7 +16,7 @@ class User(Base):
     __tablename__ = 'medplus_user'
 
     user_id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()), index=True)
-    settings_id = Column(String, ForeignKey('settings.id'), nullable=True)
+    settings_id = Column(String, ForeignKey('settings.settings_id'), nullable=True)
     username = Column(String, unique=True, nullable=False)
     email = Column(String, unique=True, nullable=False)
     password_hash = Column(String, nullable=False)
@@ -131,7 +131,7 @@ class Admin(User):
     __tablename__ = 'admin' 
 
     admin_id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()), index=True)
-    # user_id = Column(String, ForeignKey('medplus_user.user_id', ondelete="CASCADE"), nullable=False)
+    user_id = Column(String, ForeignKey('medplus_user.user_id', ondelete="CASCADE"), nullable=False)
 
     __mapper_args__ = {
         'polymorphic_identity': 'admin',  
@@ -167,7 +167,7 @@ class Staff(User):
     __tablename__ = 'staff'
 
     staff_id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()), index=True)
-    # user_id = Column(String, ForeignKey('medplus_user.user_id', ondelete="CASCADE"), nullable=False)
+    user_id = Column(String, ForeignKey('medplus_user.user_id', ondelete="CASCADE"), nullable=False)
     
 
     employment_date = Column(Date, nullable=False)
@@ -228,7 +228,7 @@ class Doctor(Staff):
     __tablename__ = 'doctor'
 
     doctor_id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()), index=True)
-    # staff_id = Column(String, ForeignKey('staff.staff_id', ondelete="CASCADE"), nullable=False)
+    staff_id = Column(String, ForeignKey('staff.staff_id', ondelete="CASCADE"), nullable=False)
 
 
     specializations = Column(String, nullable=True)  
@@ -247,7 +247,7 @@ class Patient(User):
     __tablename__ = 'patient'
 
     patient_id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()), index=True)
-    # user_id = Column(String, ForeignKey('medplus_user.user_id', ondelete="CASCADE"), nullable=False)
+    user_id = Column(String, ForeignKey('medplus_user.user_id', ondelete="CASCADE"), nullable=False)
     address = Column(String, nullable=True)
 
     medical_history = relationship("MedicalHistory", back_populates="patient", uselist=False)
@@ -297,7 +297,7 @@ class Treatment(Base):
 
     appointment_id = Column(String, ForeignKey('appointment.appointment_id'), nullable=True)
     prescription_id = Column(String, ForeignKey('prescription.prescription_id'), nullable=True)
-    labtest_id = Column(String, ForeignKey('lab_test.labtest_id'), nullable=True)
+    labtest_id = Column(String, ForeignKey('lab_test.test_id'), nullable=True)
     bill_id = Column(String, ForeignKey('bill.bill_id', ondelete="CASCADE"), nullable=True)
   
     appointment = relationship("Appointment")
@@ -483,20 +483,20 @@ class Allergy(Base):
 
 medical_history_medications = Table(
     'medical_history_medications', Base.metadata,
-    Column('medical_history_id', String, ForeignKey('medical_history.medical_history_id'),ondelete="CASCADE"),
-    Column('medication_id', String, ForeignKey('medication.medication_id'),ondelete="CASCADE")
+    Column('medical_history_id', String, ForeignKey('medical_history.medical_history_id',ondelete="CASCADE"), primary_key=True),
+    Column('medication_id', String, ForeignKey('medication.medication_id',ondelete="CASCADE"), primary_key=True)
 )
 
 medical_history_diagnoses = Table(
     'medical_history_diagnoses', Base.metadata,
-    Column('medical_history_id', String, ForeignKey('medical_history.medical_history_id'),ondelete="CASCADE"),
-    Column('diagnosis_id', String, ForeignKey('diagnosis.diagnosis_id'),ondelete="CASCADE")
+    Column('medical_history_id', String, ForeignKey('medical_history.medical_history_id',ondelete="CASCADE"), primary_key=True),
+    Column('diagnosis_id', String, ForeignKey('diagnosis.diagnosis_id',ondelete="CASCADE"), primary_key=True)
 )
 
 medical_history_allergies = Table(
     'medical_history_allergies', Base.metadata,
-    Column('medical_history_id', String, ForeignKey('medical_history.medical_history_id'),ondelete="CASCADE"),
-    Column('allergy_id', String, ForeignKey('allergy.allergy_id'),ondelete="CASCADE")
+    Column('medical_history_id', String, ForeignKey('medical_history.medical_history_id',ondelete="CASCADE"), primary_key=True),
+    Column('allergy_id', String, ForeignKey('allergy.allergy_id',ondelete="CASCADE"), primary_key=True)
 )
 
 class MedicalHistory(Base):
