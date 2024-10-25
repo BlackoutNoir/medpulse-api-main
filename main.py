@@ -1,13 +1,14 @@
 from fastapi import FastAPI
-from backend.app.api.routes import user  
-from database import engine, Base
+from database import engine, Base, get_db
+
+
 
 
 app = FastAPI()
 
-Base.metadata.create_all(bind=engine)
-
-app.include_router(user.router, prefix="/api")
-
+@app.get('/')
+def index():
+    return 'hello'
+# models.Base.metadata.create_all(bind=engine)
 
   
