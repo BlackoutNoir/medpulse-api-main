@@ -16,7 +16,7 @@ class User(Base):
     __tablename__ = 'medplus_user'
 
     user_id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()), index=True)
-    settings_id = Column(String, ForeignKey('settings.settings_id'), nullable=True)
+    # settings_id = Column(String, ForeignKey('settings.settings_id',name="fk_user_settings_id"), nullable=True)
     username = Column(String, unique=True, nullable=False)
     email = Column(String, unique=True, nullable=False)
     password_hash = Column(String, nullable=False)
@@ -76,7 +76,7 @@ class Settings(Base):
     auth_type = Column(Enum(AuthType), nullable=False)
 
 
-    user_id = Column(String, ForeignKey('medplus_user.user_id', ondelete="CASCADE"), unique=True, nullable=False)
+    user_id = Column(String, ForeignKey('medplus_user.user_id', ondelete="CASCADE",), unique=True, nullable=False)
     user = relationship("User", back_populates="settings")
 
 
