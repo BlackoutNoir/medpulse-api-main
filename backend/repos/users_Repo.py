@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
-from models import User
-from schema import UserCreate, UserUpdate  
+from backend.models import User
+from backend.schema import UserCreate, UserUpdate  
 from base_Repo import BaseRepo
 from typing import Optional
 import uuid

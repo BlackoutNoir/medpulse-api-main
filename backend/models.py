@@ -3,7 +3,7 @@ import uuid
 from datetime import datetime
 from sqlalchemy import Boolean, Column, Date, Float, ForeignKey, Integer, String , DateTime, Table, Enum
 from sqlalchemy.orm import relationship
-from database import Base
+from backend.database import Base
 
 
 chat_participants = Table(

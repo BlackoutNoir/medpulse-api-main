@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
-from models import Appointment
-from schema import AppointmentCreate, AppointmentUpdate
+from backend.models import Appointment
+from backend.schema import AppointmentCreate, AppointmentUpdate
 from base_Repo import BaseRepo
 from typing import List
 from datetime import datetime

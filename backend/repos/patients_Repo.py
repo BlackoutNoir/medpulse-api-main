@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
-from models import Patient
-from schema import PatientCreate, PatientUpdate
+from backend.models import Patient
+from backend.schema import PatientCreate, PatientUpdate
 from base_Repo import BaseRepo
 from typing import List
 import uuid

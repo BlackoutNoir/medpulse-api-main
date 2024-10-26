@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from database import engine, Base, get_db
+from backend.database import engine, Base, get_db
 
 
 

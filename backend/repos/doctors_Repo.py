@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from models import Doctor
+from backend.models import Doctor
 from base_Repo import BaseRepo
 from typing import List
 import uuid

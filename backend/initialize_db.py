@@ -1,5 +1,5 @@
-from database import engine, Base
-from models import *
+from backend.database import engine, Base
+from backend.models import *
 
 Base.metadata.drop_all(bind=engine)
 
