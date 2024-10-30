@@ -9,10 +9,11 @@ class Settings(BaseSettings):
     DB_PORT: Optional[int] = 5432
     DB_NAME: Optional[str]
 
-    DB_URL: Optional[str]
+    DB_URL: Optional[str] = None
 
     @property
     def DATABASE_URL(self) -> str:
+
         if self.DB_URL:
             return self.DB_URL
         

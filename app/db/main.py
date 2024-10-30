@@ -22,9 +22,9 @@ async def get_async_session() -> AsyncSession:
     async with async_session() as session:
         yield session
 
-DBsession = Annotated[AsyncSession, Depends(get_async_session)]
+db_session = Annotated[AsyncSession, Depends(get_async_session)]
 
-# async def init_db() -> None:
-#     async with engine.begin() as conn:
-#         #import models
-#         await conn.run_sync(SQLModel.metadata.create_all)
+async def init_db() -> None:
+    async with engine.begin() as conn:
+        from app.db.models import Settings
+        await conn.run_sync(SQLModel.metadata.create_all)
