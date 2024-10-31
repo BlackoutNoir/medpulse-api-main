@@ -20,8 +20,8 @@ class UserSettingsRepo:
 
         return SettingsResponse.model_validate(setting) if setting else None
 
-    async def create_setting(self, setting: SettingsCreate, session: db_session) -> SettingsResponse:
-        new_setting = Settings(**setting.model_dump())
+    async def create_setting(self, setting_data: SettingsCreate, session: db_session) -> SettingsResponse:
+        new_setting = Settings(**setting_data.model_dump())
         session.add(new_setting)
         await session.commit()
         await session.refresh(new_setting)
