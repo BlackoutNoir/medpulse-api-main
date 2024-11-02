@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field, EmailStr
+from pydantic import BaseModel, Field, EmailStr, model_validator
 from typing import Optional
 import uuid
 
@@ -11,7 +11,7 @@ class UserBase(BaseModel):
 
 
 class UserCreate(UserBase):
-    password: str = Field(min_length=8)
+    password_hash: str = Field(min_length=8)
 
 
 class UserUpdate(UserBase):
@@ -28,3 +28,14 @@ class UserResponse(UserBase):
     model_config = {
         "from_attributes": True
     }
+
+class UserLogin(BaseModel):
+    email: Optional[EmailStr] = None
+    username: Optional[str] = None
+    password: str 
+
+    @model_validator(mode="before")
+    def check_email_or_username(cls, values):
+        if not values.get("email") and not values.get("username"):
+            raise ValueError("Either email or username must be provided")
+        return values

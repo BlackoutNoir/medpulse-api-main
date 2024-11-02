@@ -11,6 +11,9 @@ class Settings(BaseSettings):
 
     DB_URL: Optional[str] = None
 
+    JWT_SECRET_KEY: str
+    JWT_ALGORITHM: str
+
     @property
     def DATABASE_URL(self) -> str:
 

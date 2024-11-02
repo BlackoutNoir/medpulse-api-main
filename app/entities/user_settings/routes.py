@@ -3,6 +3,7 @@ from typing import List
 from app.db.main import db_session
 from app.entities.user_settings.repo import UserSettingsRepo
 from app.entities.user_settings.schema import SettingsResponse, SettingsCreate, SettingsUpdate
+from app.handlers.auth.dependencies import access_token_bearer
 
 user_settings_router = APIRouter()
 repo = UserSettingsRepo()
@@ -13,7 +14,7 @@ async def get_all_settings(session: db_session):
 
 
 @user_settings_router.get("/{settings_id}", response_model=SettingsResponse)
-async def get_setting(settings_id: str, session: db_session):
+async def get_setting(settings_id: str, session: db_session, access_token: access_token_bearer):
     settings =  await UserSettingsRepo().get_setting(settings_id, session)
     if not settings:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Settings not found")
