@@ -11,7 +11,8 @@ class UserBase(BaseModel):
 
 
 class UserCreate(UserBase):
-    password_hash: str = Field(min_length=8)
+    password: str = Field(min_length=8)
+    user_type: str
 
 
 class UserUpdate(UserBase):
@@ -24,7 +25,7 @@ class UserUpdate(UserBase):
 
 class UserResponse(UserBase):
     uid: uuid.UUID
-
+    user_type : str
     model_config = {
         "from_attributes": True
     }

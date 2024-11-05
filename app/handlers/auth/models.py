@@ -25,6 +25,12 @@ class User(SQLModel, table=True):
     updated_at: datetime = Field(sa_column=Column(pg.TIMESTAMP, default=datetime.now))  
     last_login: datetime = Field(sa_column=Column(pg.TIMESTAMP, default=datetime.now))
     password_hash: str = Field(exclude=True)
+
+    user_type: str = Field(
+        sa_column=Column(pg.VARCHAR, nullable=False, server_default="patient")
+    )
+
+
     def __repr__(self):
         return f"<User {self.username}>"
     

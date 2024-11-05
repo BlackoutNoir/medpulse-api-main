@@ -5,6 +5,11 @@ from app.db.main import db_session
 from app.handlers.auth.utils import decode_token, create_access_token, verify_passwd
 from datetime import timedelta
 from fastapi.responses import JSONResponse
+from app.handlers.auth.dependencies import refresh_token_bearer, access_token_bearer
+from datetime import datetime
+from app.db.redis import add_jti_to_blocklist
+from app.handlers.auth.dependencies import get_current_user
+
 
 auth_router = APIRouter()
 user_repo = UserRepo()
@@ -44,7 +49,8 @@ async def login(user_data: UserLogin, session: db_session):
             access_token=create_access_token(
                 user_data={
                     "email": user.email,
-                    "user_uid": str(user.uid)   
+                    "user_uid": str(user.uid),
+                    "user_type" : user.user_type 
                 },
             )
             
@@ -60,7 +66,7 @@ async def login(user_data: UserLogin, session: db_session):
             return JSONResponse(
                 content={
                     "message" : "Login successful",
-                    "access_token" : refresh_token,
+                    "access_token" : access_token,
                     "refresh_token" : refresh_token,
                     "user" : {
                         "email" : user.email,
@@ -68,4 +74,32 @@ async def login(user_data: UserLogin, session: db_session):
                     }
                 }
             )
-    raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials")        
+    raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials") 
+
+
+
+@auth_router.get("/refresh_token")
+async def get_new_access_token(token_details: refresh_token_bearer):
+    expiry_timestamp = token_details["exp"]
+
+    if datetime.fromtimestamp(expiry_timestamp) > datetime.now():
+        new_access_token = create_access_token(user_data=token_details["user"])
+
+        return JSONResponse(content={"access_token": new_access_token})
+
+    raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
+
+
+@auth_router.get("/logout")
+async def revoke_token(token_details: access_token_bearer):
+    jti = token_details["jti"]
+
+    await add_jti_to_blocklist(jti)
+
+    return JSONResponse(
+        content={"message": "Logged Out Successfully"}, status_code=status.HTTP_200_OK
+    )
+
+@auth_router.get("/current")
+async def get_current_user(user: get_current_user):
+    return user
