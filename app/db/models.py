@@ -56,3 +56,45 @@ class Settings(SQLModel, table=True):
     email_reminders: bool = Field(default=False)
     sms_reminders: bool = Field(default=False)
     auth_type: AuthType = Field(nullable=False)
+
+class Log:
+    pass
+
+class Chat:
+    pass
+
+class Admin:
+    pass
+
+class Staff:
+    pass
+
+class Patient:
+    pass
+
+class Pages:
+    pass
+
+class Department:
+    pass
+
+class Bill:
+    pass
+
+class Appointment:
+    pass
+
+class Labtest:
+    pass
+
+class Prescription:
+    pass
+
+class Medication:
+    pass
+
+class Allergies:
+    pass
+
+class Diagnosis:
+    pass
