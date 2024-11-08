@@ -19,7 +19,6 @@ async def cleanup_blocklist():
             del token_blocklist[jti]
         await asyncio.sleep(60)
 
-asyncio.create_task(cleanup_blocklist())
 
 async def token_in_blocklist(jti: str) -> bool:
     return jti in token_blocklist and token_blocklist[jti] > datetime.now()

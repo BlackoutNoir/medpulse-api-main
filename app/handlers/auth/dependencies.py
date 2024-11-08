@@ -4,12 +4,12 @@ from fastapi import Request, Depends, status
 from fastapi.security.http import HTTPAuthorizationCredentials
 from app.handlers.auth.utils import decode_token
 from fastapi.exceptions import HTTPException
-from app.db.redis import token_in_blocklist
+from app.db.blocklist import token_in_blocklist
 from app.db.main import db_session
-from app.handlers.auth.repo import UserRepo
+from app.handlers.auth.repo import AuthRepo
 from app.handlers.auth.schemas import UserResponse
 
-user_repo = UserRepo()
+user_repo = AuthRepo()
 
 
 class TokenBearer(HTTPBearer):

@@ -7,10 +7,9 @@ from app.handlers.auth.dependencies import access_token_bearer, RoleChecker
 
 user_settings_router = APIRouter()
 repo = UserSettingsRepo()
-admin_role_checker = Annotated[bool,Depends(RoleChecker['admin'])]
+# admin_role_checker = Depends(RoleChecker(['admin']))
 
 @user_settings_router.get("/", response_model=List[SettingsResponse],
-                        dependencies=admin_role_checker
                           )
 async def get_all_settings(session: db_session,   user_details: access_token_bearer):
     return await UserSettingsRepo().get_all_settings(session)

@@ -1,12 +1,12 @@
 from typing import List, Optional
-from app.handlers.auth.models import User
+from app.db.models import User
 from app.db.main import db_session
 from app.handlers.auth.schemas import UserCreate, UserResponse
 from sqlmodel import select, or_
 from app.handlers.auth.utils import generate_passwd_hash, verify_passwd, decode_token, create_access_token
 
 
-class UserRepo:
+class AuthRepo:
 
     async def get_user_by_email(self,email: str, session: db_session) -> User:       
         statement = select(User).where(User.email == email)

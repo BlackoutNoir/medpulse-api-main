@@ -1,18 +1,18 @@
 from fastapi import APIRouter, HTTPException, status
 from app.handlers.auth.schemas import UserCreate, UserResponse, UserLogin
-from app.handlers.auth.repo import UserRepo
+from app.handlers.auth.repo import AuthRepo
 from app.db.main import db_session
 from app.handlers.auth.utils import decode_token, create_access_token, verify_passwd
 from datetime import timedelta
 from fastapi.responses import JSONResponse
 from app.handlers.auth.dependencies import refresh_token_bearer, access_token_bearer
 from datetime import datetime
-from app.db.redis import add_jti_to_blocklist
+from app.db.blocklist import add_jti_to_blocklist
 from app.handlers.auth.dependencies import get_current_user
 
 
 auth_router = APIRouter()
-user_repo = UserRepo()
+user_repo = AuthRepo()
 
 REFRESH_TOKEN_EXPIRY = 2
 

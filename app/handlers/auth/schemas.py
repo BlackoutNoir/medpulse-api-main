@@ -12,12 +12,12 @@ class UserBase(BaseModel):
 
 class UserCreate(UserBase):
     password: str = Field(min_length=8)
-    user_type: str
+    user_type: str = "patient"
 
 
 class UserUpdate(UserBase):
     
-    username: Optional[str] = Field(min_length=3, max_length=8)
+    username: Optional[str] = Field(min_length=3, max_length=24)
     email: Optional[EmailStr] = Field(max_length=50)
     firstname: Optional[str]
     lastname: Optional[str]
