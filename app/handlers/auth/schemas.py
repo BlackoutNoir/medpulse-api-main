@@ -1,9 +1,10 @@
 from pydantic import BaseModel, Field, EmailStr, model_validator
 from typing import Optional
 import uuid
+from app.db.enums import user_type as UserType
 
 class UserBase(BaseModel):
-    username: str =  Field(min_length=3, max_length=8)
+    username: str =  Field(min_length=3, max_length=24)
     email: EmailStr = Field(max_length=50)
     firstname: str
     lastname: str
@@ -12,20 +13,12 @@ class UserBase(BaseModel):
 
 class UserCreate(UserBase):
     password: str = Field(min_length=8)
-    user_type: str = "patient"
+    user_type: UserType = UserType.patient
 
-
-class UserUpdate(UserBase):
-    
-    username: Optional[str] = Field(min_length=3, max_length=24)
-    email: Optional[EmailStr] = Field(max_length=50)
-    firstname: Optional[str]
-    lastname: Optional[str]
-    password: Optional[str] = Field(min_length=8)
 
 class UserResponse(UserBase):
     uid: uuid.UUID
-    user_type : str
+    user_type : UserType
     model_config = {
         "from_attributes": True
     }

@@ -3,8 +3,7 @@ from app.db.models import User
 from app.db.main import db_session
 from app.handlers.auth.schemas import UserCreate, UserResponse
 from sqlmodel import select, or_
-from app.handlers.auth.utils import generate_passwd_hash, verify_passwd, decode_token, create_access_token
-
+from datetime import datetime
 
 class AuthRepo:
 
@@ -39,10 +38,15 @@ class AuthRepo:
         return user is not None
     
 
-    async def create_user(self, user_data: UserCreate, session: db_session) -> UserResponse:
-        new_user = User(**user_data.model_dump())
-        new_user.password_hash = generate_passwd_hash(user_data.password)
-        session.add(new_user)
+    async def update_last_login(self, user_id: str, session: db_session) -> None:
+        statement = select(User).where(User.uid == user_id)
+        result = await session.execute(statement)
+        user = result.scalars().one_or_none()
+
+        if not user:
+            return None
+
+        user.last_login = datetime.now()
+
         await session.commit()
-        await session.refresh(new_user)
-        return UserResponse.model_validate(new_user)
+        await session.refresh(user)

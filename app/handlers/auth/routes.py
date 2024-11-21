@@ -1,6 +1,7 @@
 from fastapi import APIRouter, HTTPException, status
 from app.handlers.auth.schemas import UserCreate, UserResponse, UserLogin
 from app.handlers.auth.repo import AuthRepo
+from app.handlers.auth.service import AuthService
 from app.db.main import db_session
 from app.handlers.auth.utils import decode_token, create_access_token, verify_passwd
 from datetime import timedelta
@@ -12,7 +13,8 @@ from app.handlers.auth.dependencies import get_current_user
 
 
 auth_router = APIRouter()
-user_repo = AuthRepo()
+auth_repo = AuthRepo()
+auth_service = AuthService()
 
 REFRESH_TOKEN_EXPIRY = 2
 
@@ -23,12 +25,17 @@ REFRESH_TOKEN_EXPIRY = 2
         )
 async def create_user(user_data: UserCreate, session: db_session):
     email = user_data.email
-    user_exists = await user_repo.user_exists(session, email=email)
+    user_exists = await auth_repo.user_exists(session, email=email)
 
     if user_exists:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Email already in use")
     
-    new_user = await user_repo.create_user(user_data, session)
+    user_exists = await auth_repo.user_exists(session, username=user_data.username)
+
+    if user_exists:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Username already in use")
+
+    new_user = await auth_service.create_user(user_data, session)
     return UserResponse.model_validate(new_user)
 
 
@@ -38,9 +45,9 @@ async def create_user(user_data: UserCreate, session: db_session):
 async def login(user_data: UserLogin, session: db_session):   
     
     if user_data.email:
-        user = await user_repo.get_user_by_email(user_data.email, session)
+        user = await auth_repo.get_user_by_email(user_data.email, session)
     else:
-        user = await user_repo.get_user_by_username(user_data.username, session)
+        user = await auth_repo.get_user_by_username(user_data.username, session)
 
     if user is not None:
         password_valid = verify_passwd(user_data.password, user.password_hash)
@@ -62,6 +69,8 @@ async def login(user_data: UserLogin, session: db_session):
                 refresh=True,
                 expiry=timedelta(days=REFRESH_TOKEN_EXPIRY)
             )
+
+            await auth_repo.update_last_login(user.uid, session)
 
             return JSONResponse(
                 content={

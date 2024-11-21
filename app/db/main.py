@@ -26,5 +26,9 @@ db_session = Annotated[AsyncSession, Depends(get_async_session)]
 
 async def init_db() -> None:
     async with engine.begin() as conn:
-        from app.db.models import Settings
-        await conn.run_sync(SQLModel.metadata.create_all)
+        pass
+        # from app.db.models import Settings, User
+        # await conn.run_sync(SQLModel.metadata.create_all)
+
+
+  
