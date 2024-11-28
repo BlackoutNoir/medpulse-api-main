@@ -2,6 +2,7 @@ from pydantic import BaseModel
 from typing import Optional, List
 import uuid
 from datetime import date, datetime
+from app.entities.user.schema import UserBase
 
 
 
@@ -23,7 +24,7 @@ class ScheduleBase(BaseModel):
 
 # creation model
 class ScheduleCreate(ScheduleBase):
-    staff_id: uuid.UUID
+    staff_uid: uuid.UUID
 
 class StaffCreate(StaffBase):
     schedules: List[ScheduleCreate]
@@ -51,10 +52,16 @@ class ScheduleResponse(ScheduleBase):
         "from_attributes": True
     }
 
+class userResponse(UserBase):
+    uid: uuid.UUID
+
+    model_config = {
+        "from_attributes": True
+    }
 
 class StaffResponse(StaffBase):
     uid: uuid.UUID
-
+    user: userResponse
     model_config = {
         "from_attributes": True
     }

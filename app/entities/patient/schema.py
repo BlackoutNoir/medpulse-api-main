@@ -2,6 +2,8 @@ from pydantic import BaseModel
 from typing import Optional, List
 import uuid
 from app.db.enums import blood_type as BloodType
+from app.entities.user.schema import UserBase
+from app.entities.appointment.schema import AppointmentBase
 
 
 class MedicalHistoryBase(BaseModel):
@@ -9,8 +11,8 @@ class MedicalHistoryBase(BaseModel):
     height: Optional[float] 
     weight: Optional[float] 
 
-class AppointmentBase(BaseModel):
-    uid: uuid.UUID
+# class AppointmentBase(BaseModel):
+#     uid: uuid.UUID
 
 class LabTestBase(BaseModel):
     uid: uuid.UUID
@@ -69,16 +71,27 @@ class insuranceResponse(InsuranceBase):
         "from_attributes": True
     }
 
+class UserResponse(UserBase):
+    uid: uuid.UUID
+    model_config = {
+        "from_attributes": True
+    }
+
+class AppointmentResponse(AppointmentBase):
+    uid: uuid.UUID
+    model_config = {
+        "from_attributes": True
+    }
 
 class PatientResponse(PatientBase):
     uid: uuid.UUID
     medical_history: MedicalHistoryResponse
     insurance: Optional[InsuranceBase]
-    appointments: List[AppointmentBase]
+    appointments: List[AppointmentResponse]
     lab_tests: List[LabTestBase]
     prescriptions: List[PrescriptionBase]
     bills: List[BillBase]
-
+    user:  UserResponse
     model_config = {
         "from_attributes": True
     }

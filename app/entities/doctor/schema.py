@@ -1,6 +1,9 @@
 from pydantic import BaseModel
 from typing import Optional, List
 import uuid
+from app.entities.appointment.schema import AppointmentBase
+from app.entities.user.schema import UserBase
+from app.entities.staff.schema import StaffBase
 
 
 # Base models
@@ -26,9 +29,31 @@ class DoctorUpdate(DoctorBase):
     enable_online_appointments: Optional[bool] = None
 
 # response models
+
+class UserResponse(UserBase):
+    uid: uuid.UUID
+    model_config = {
+        "from_attributes": True
+    }
+
+class StaffResponse(StaffBase):
+    uid: uuid.UUID
+    user: UserResponse
+    model_config = {
+        "from_attributes": True
+    }
+
+class AppointmentResponse(AppointmentBase):
+    uid: uuid.UUID
+    model_config = {
+        "from_attributes": True
+    }
+
 class DoctorResponse(DoctorBase):
     uid: uuid.UUID
 
+    staff: StaffResponse
+    appointments: List[AppointmentResponse]
     model_config = {
         "from_attributes": True
     }

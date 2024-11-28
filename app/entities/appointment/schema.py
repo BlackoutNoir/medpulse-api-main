@@ -10,7 +10,7 @@ class AppointmentBase(BaseModel):
 
     start_date: datetime 
     duration: int # in minutes 
-    is_checked_in: bool 
+    is_checked_in: bool = False
     status: Optional[appointment_status_type] = appointment_status_type.PENDING
     reason_for_visit: Optional[str] = None
     location: str
