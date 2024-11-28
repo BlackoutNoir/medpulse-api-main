@@ -42,7 +42,7 @@ def upgrade() -> None:
     sa.Column('last_login', postgresql.TIMESTAMP(), nullable=True),
     sa.Column('password_hash', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
     sa.Column('image_url', sqlmodel.sql.sqltypes.AutoString(), nullable=True),
-    sa.Column('user_type', sa.Enum('admin', 'patient', 'staff', name='user_type'), nullable=False),
+    sa.Column('user_type', sa.Enum('admin', 'patient', 'staff','user', name='user_type'), nullable=False),
     sa.Column('gender', sa.Enum('male', 'female', 'other', name='gender_type'), nullable=True),
     sa.PrimaryKeyConstraint('uid'),
     sa.UniqueConstraint('email')

@@ -2,25 +2,21 @@ from pydantic import BaseModel
 from typing import Optional, List
 import uuid
 
-
-# 
+# Base model
 class DepartmentBase(BaseModel):
     name: str
     description: Optional[str] = None
     default_appointment_time: int
 
-
 # creation model
 class DepartmentCreate(DepartmentBase):
     pass
-
 
 # update model
 class DepartmentUpdate(DepartmentBase):
     name: Optional[str] = None
     description: Optional[str] = None
     default_appointment_time: Optional[int] = None
-
 
 # response models
 class DepartmentResponse(DepartmentBase):
@@ -40,7 +36,6 @@ class StaffResponse(BaseModel):
         "from_attributes": True
     }
 
-
 class UserResponse(BaseModel):
     uuid: uuid.UUID
     firstname: str
@@ -51,7 +46,6 @@ class UserResponse(BaseModel):
     model_config = {
         "from_attributes": True
     }
-
 
 #filter
 class DepartmentFilter(BaseModel):

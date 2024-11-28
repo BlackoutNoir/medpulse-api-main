@@ -3,15 +3,16 @@ from typing import List,Annotated
 from app.db.main import db_session
 from app.entities.user.repo import UserRepo
 from app.entities.user.schema import UserResponse, UserCreate, UserUpdate, UserFilter
-from app.handlers.auth.dependencies import access_token_bearer, RoleChecker
+from app.handlers.auth.dependencies import access_token_bearer, RoleCheckerFactory, RoleChecker
 
 
-# admin_role_checker = Depends(RoleChecker(['admin']))
+view_role_checker= Annotated[bool,RoleCheckerFactory.create_role_checker(entity='users',view=True)]
 user_router = APIRouter()
 repo = UserRepo()
 
 @user_router.get("/", response_model=List[UserResponse], status_code=status.HTTP_200_OK)
-async def get_all_users(session: db_session,   user_details: access_token_bearer):
+# async def get_all_users(session: db_session,   user_details: access_token_bearer, role_checker: view_role_checker):
+async def get_all_users(session: db_session):
     return await repo.get_all_users(session)
 
 @user_router.get("/{user_id}", response_model=UserResponse, status_code=status.HTTP_200_OK)

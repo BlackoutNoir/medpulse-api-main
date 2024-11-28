@@ -40,7 +40,6 @@ class PageContentUpdate(PageContentBase):
     subtitle: Optional[str] = None
     paragraph: Optional[str] = None
     image_url: Optional[str] = None
-    page_id: Optional[uuid.UUID] = None
 
 
 # Response models
@@ -66,7 +65,6 @@ class PageResponse(PageBase):
 # Filter models
 
 class PageFilter(PageBase):
-    page_id: Optional[str] = None
     title: Optional[str] = None
     created_by: Optional[str] = None
     is_visible: Optional[bool] = None

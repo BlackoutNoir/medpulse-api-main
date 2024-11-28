@@ -16,7 +16,7 @@ class UserBase(BaseModel):
     is_verified: bool = False
     is_active: bool = True
     user_type: UserType
-    gender: Optional[gender_type]
+    gender: Optional[gender_type] = None
 
 
 
@@ -90,6 +90,8 @@ class LogResponse(BaseModel):
         "from_attributes": True
     }
 
+
+
 class UserResponse(UserBase):
     uid: uuid.UUID
     
@@ -110,7 +112,6 @@ class UserResponse(UserBase):
 # filter
 
 class UserFilter(UserBase):
-    uid : Optional[str] = None
     username: Optional[str] = None
     email: Optional[str] = None
     firstname: Optional[str] = None

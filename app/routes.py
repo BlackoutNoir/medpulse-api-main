@@ -12,7 +12,8 @@ from app.entities.department.routes import department_router
 from app.entities.role.routes import role_router  
 from app.entities.staff.routes import staff_router
 from app.entities.doctor.routes import doctor_router
-
+from app.entities.patient.routes import patient_router
+from app.entities.appointment.routes import appointment_router
 
 api_router = APIRouter()
 
@@ -29,6 +30,8 @@ api_router.include_router(department_router, prefix="/departments", tags=["depar
 api_router.include_router(role_router,prefix="/roles",tags=["roles"])
 api_router.include_router(staff_router,prefix="/staffs",tags=["staffs"])
 api_router.include_router(doctor_router,prefix="/doctors",tags=["doctors"])
+api_router.include_router(patient_router,prefix="/patients",tags=["patients"])
+api_router.include_router(appointment_router,prefix="/appointments",tags=["appointments"])
 
 
 

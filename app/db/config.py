@@ -3,6 +3,7 @@ from typing import Optional
 
 
 class Settings(BaseSettings):
+
     DB_USERNAME: Optional[str]
     DB_PASSWORD: Optional[str]
     DB_HOST: Optional[str] = "localhost"
@@ -30,10 +31,21 @@ class Settings(BaseSettings):
                 
         return f"postgresql+asyncpg://{self.DB_USERNAME}:{self.DB_PASSWORD}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
 
+   
     model_config = SettingsConfigDict(
         env_file='.env',
         extra='ignore'
     )
 
+class SingletonWrapper:
+    _instances = {}
 
-Config = Settings()
+    @staticmethod
+    def get_instance(cls, *args, **kwargs):
+        if cls not in SingletonWrapper._instances:
+            SingletonWrapper._instances[cls] = cls(*args, **kwargs)
+        return SingletonWrapper._instances[cls]
+
+
+
+Config = SingletonWrapper.get_instance(Settings)

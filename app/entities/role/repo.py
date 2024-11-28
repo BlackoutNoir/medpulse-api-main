@@ -68,6 +68,8 @@ class RoleRepo:
 
         conditions = []
         for field, value in filters.model_dump(exclude_none=True).items():
+            if field == "order_by":
+                continue
             column = getattr(Role, field)
             if field in partial_match_fields and isinstance(value, str):
                 conditions.append(column.ilike(f"%{value}%"))
@@ -77,6 +79,10 @@ class RoleRepo:
 
         if conditions:
             statement = statement.where(and_(*conditions))
+
+        if filters.order_by and hasattr(Role, filters.order_by):
+            order_column = getattr(Role, filters.order_by)
+            statement = statement.order_by(order_column)
 
         result = await session.execute(statement)
         roles = result.scalars().all()

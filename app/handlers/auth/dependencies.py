@@ -8,6 +8,9 @@ from app.db.blocklist import token_in_blocklist
 from app.db.main import db_session
 from app.handlers.auth.repo import AuthRepo
 from app.handlers.auth.schemas import UserResponse
+from app.db.enums import (
+    user_type,
+)
 
 user_repo = AuthRepo()
 
@@ -90,9 +93,38 @@ class RoleChecker:
     def __call__(self, current_user: get_current_user) :
         if current_user.user_type in self.allowed_roles:
             return True
+        
+        if current_user.user_type == user_type.staff:
+            for permission in current_user.staff.role.permissions:
+                if permission.description in self.allowed_roles:
+                    return True
 
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="You are not allowed to preform this action"
         )
+    
+class RoleCheckerFactory:
+    @staticmethod
+    def create_role_checker(entity: str, staff: bool = False,patient: bool = False,edit: bool = False,view: bool = False) -> RoleChecker:
+        allowed_roles = ['admin']
+
+        if staff: 
+            allowed_roles.append('staff')
+
+        if patient:
+            allowed_roles.append('patient')
+
+        if edit:
+            allowed_roles.append(f'edit {entity}') 
+
+        if view:
+            allowed_roles.append(f'view {entity}') 
+
+        return RoleChecker(allowed_roles)
+
+
+
+
+
     

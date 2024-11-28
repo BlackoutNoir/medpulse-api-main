@@ -7,6 +7,7 @@ class user_type(str, Enum):
     admin = "admin"
     patient = "patient"
     staff = "staff"
+    user = "user"
 
 
 class auth_type(str, Enum):

@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field, EmailStr, model_validator
-from typing import Optional
+from typing import Optional, List
 import uuid
 from app.db.enums import user_type as UserType
 
@@ -16,9 +16,31 @@ class UserCreate(UserBase):
     user_type: UserType = UserType.patient
 
 
+class PermissionResponse(BaseModel):
+    description : str
+
+    model_config = {
+        "from_attributes": True
+    }
+
+class RoleResponse(BaseModel):
+    permissions: List[PermissionResponse]
+
+    model_config = {
+        "from_attributes": True
+    }
+
+class StaffResponse(BaseModel):
+    role : RoleResponse
+    model_config = {
+        "from_attributes": True
+    }
+
+
 class UserResponse(UserBase):
     uid: uuid.UUID
     user_type : UserType
+    staff: Optional[StaffResponse]
     model_config = {
         "from_attributes": True
     }

@@ -48,9 +48,9 @@ class LogResponse(LogBase):
 
 # Filter model
 class LogFilter(LogBase):
-    uid: Optional[str] = None
     action: Optional[action_type] = None
     entity: Optional[entity_type] = None
     description: Optional[str] = None
     timestamp: Optional[datetime] = None
     user_uid: Optional[uuid.UUID] = None
+    order_by: Optional[str] = None

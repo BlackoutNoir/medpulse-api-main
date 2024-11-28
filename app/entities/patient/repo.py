@@ -76,7 +76,7 @@ class PatientRepo:
         
 
         partial_match_fields = [
-            "uuid","address"
+            "address"
             ]
 
 

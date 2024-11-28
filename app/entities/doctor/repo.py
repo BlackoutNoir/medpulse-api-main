@@ -64,7 +64,7 @@ class DoctorRepo:
         
 
         partial_match_fields = [
-            "uuid","name","description"
+            "uuid","name"
             ]
 
 

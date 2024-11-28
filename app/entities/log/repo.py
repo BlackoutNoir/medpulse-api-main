@@ -68,6 +68,8 @@ class LogRepo:
 
         conditions = []
         for field, value in filters.model_dump(exclude_none=True).items():
+            if field == "order_by":
+                continue
             column = getattr(Log, field)
             if field in partial_match_fields and isinstance(value, str):
                 conditions.append(column.ilike(f"%{value}%"))
@@ -77,6 +79,10 @@ class LogRepo:
 
         if conditions:
             statement = statement.where(and_(*conditions))
+
+        if filters.order_by and hasattr(Staff, filters.order_by):
+            order_column = getattr(Staff, filters.order_by)
+            statement = statement.order_by(order_column)
 
         result = await session.execute(statement)
         logs = result.scalars().all()

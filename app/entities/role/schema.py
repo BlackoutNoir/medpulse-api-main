@@ -67,7 +67,6 @@ class RoleResponse(RoleBase):
 
 # Filter model
 class RoleFilter(RoleBase):
-    uid: Optional[str] = None
     name: Optional[str] = None
     description: Optional[str] = None
     order_by: Optional[str] = None

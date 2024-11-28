@@ -26,13 +26,13 @@ app = FastAPI(
     lifespan=lifespan
 )
 
-# app.add_middleware(
-#     CORSMiddleware,
-#     allow_orgins=Config.FRNT_END_URL,
-#     allow_credentials = True,
-#     allow_methodes=["*"],
-#     allow_headers=["*"]
-# )
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=Config.FRNT_END_URL,
+    allow_credentials = True,
+    allow_methods=["*"],
+    allow_headers=["*"]
+)
 
 
 

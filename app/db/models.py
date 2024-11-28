@@ -41,9 +41,9 @@ class User(SQLModel, table=True):
     date_of_birth:  Optional[date] = Field(default=None, nullable=True)
     is_verified: bool = Field(default=False)
     is_active: bool = Field(default=True)
-    created_at: datetime = Field(sa_column=Column(pg.TIMESTAMP, default=datetime.now(timezone.utc)))
-    updated_at: datetime = Field(sa_column=Column(pg.TIMESTAMP, default=datetime.now(timezone.utc)))  
-    last_login: datetime = Field(sa_column=Column(pg.TIMESTAMP, default=datetime.now(timezone.utc)))
+    created_at: datetime = Field(sa_column=Column(pg.TIMESTAMP(timezone=True), default=datetime.now(timezone.utc)))
+    updated_at: datetime = Field(sa_column=Column(pg.TIMESTAMP(timezone=True), default=datetime.now(timezone.utc)))  
+    last_login: datetime = Field(sa_column=Column(pg.TIMESTAMP(timezone=True), default=datetime.now(timezone.utc)))
     password_hash: str = Field(exclude=True)
     image_url: str = Field(default=None, nullable=True)
 
@@ -117,7 +117,7 @@ class Log (SQLModel, table=True):
     action: action_type
     entity: entity_type
     description: str 
-    timestamp: datetime = Field(sa_column=Column(pg.TIMESTAMP, default=datetime.now(timezone.utc)))
+    timestamp: datetime = Field(sa_column=Column(pg.TIMESTAMP(timezone=True), default=datetime.now(timezone.utc)))
 
     user: User = Relationship(
         back_populates="logs",
@@ -132,7 +132,7 @@ class Chat(SQLModel, table=True):
     )
 
     name: str
-    creation_date: datetime = Field(sa_column=Column(pg.TIMESTAMP, default=datetime.now(timezone.utc)))
+    creation_date: datetime = Field(sa_column=Column(pg.TIMESTAMP(timezone=True), default=datetime.now(timezone.utc)))
 
     messages: List["Message"] = Relationship(
         back_populates="chat",
@@ -152,7 +152,7 @@ class Message(SQLModel, table=True):
         sa_column=Column(pg.UUID, nullable=False, primary_key=True, default=uuid.uuid4)
     )
 
-    timestamp: datetime = Field(sa_column=Column(pg.TIMESTAMP, default=datetime.now(timezone.utc)))
+    timestamp: datetime = Field(sa_column=Column(pg.TIMESTAMP(timezone=True), default=datetime.now(timezone.utc)))
     is_read: bool = Field(default=False)
     message_content: str
 
@@ -174,8 +174,8 @@ class Page(SQLModel, table=True):
 
     title: str
     created_by: str
-    created_date: datetime = Field(sa_column=Column(pg.TIMESTAMP, default=datetime.now(timezone.utc)))
-    last_modified: datetime = Field(sa_column=Column(pg.TIMESTAMP, default=datetime.now(timezone.utc), onupdate=datetime.now(timezone.utc)) )
+    created_date: datetime = Field(sa_column=Column(pg.TIMESTAMP(timezone=True), default=datetime.now(timezone.utc)))
+    last_modified: datetime = Field(sa_column=Column(pg.TIMESTAMP(timezone=True), default=datetime.now(timezone.utc), onupdate=datetime.now(timezone.utc)) )
     is_visible: bool = Field(default=True)
 
     contents: List["PageContent"] = Relationship(
@@ -452,7 +452,7 @@ class Bill(SQLModel, table=True):
     amount: float 
     description: str
     payed: bool
-    date_issued:  datetime = Field(sa_column=Column(pg.TIMESTAMP, default=datetime.now(timezone.utc)))
+    date_issued:  datetime = Field(sa_column=Column(pg.TIMESTAMP(timezone=True), default=datetime.now(timezone.utc)))
 
     patient_uid: uuid.UUID = Field(
         foreign_key="patient.uid", nullable=False, ondelete="CASCADE"
@@ -471,7 +471,7 @@ class Payment(SQLModel, table=True):
     )
 
     amount_paid: float = Field(nullable=False)
-    date:  datetime = Field(sa_column=Column(pg.TIMESTAMP, default=datetime.now(timezone.utc)))
+    date:  datetime = Field(sa_column=Column(pg.TIMESTAMP(timezone=True), default=datetime.now(timezone.utc)))
     status: payment_status_type = Field(default=payment_status_type.UNPAYED)
     transaction_id: Optional[str] = Field(default=None)
     description: Optional[str] = Field(default=None)
@@ -538,7 +538,7 @@ class LabTest(SQLModel, table=True):
         sa_column=Column(pg.UUID, nullable=False, primary_key=True, default=uuid.uuid4)
     )
 
-    date_issued:  datetime = Field(sa_column=Column(pg.TIMESTAMP, default=datetime.now(timezone.utc)))
+    date_issued:  datetime = Field(sa_column=Column(pg.TIMESTAMP(timezone=True), default=datetime.now(timezone.utc)))
     date_performed: Optional[datetime] = Field(default=None)
     test_status: lab_test_status = Field(
         default=lab_test_status.PENDING
@@ -607,7 +607,7 @@ class Prescription(SQLModel, table=True):
         sa_column=Column(pg.UUID, nullable=False, primary_key=True, default=uuid.uuid4)
     )
 
-    date_prescribed: datetime = Field(sa_column=Column(pg.TIMESTAMP, default=datetime.now(timezone.utc)))
+    date_prescribed: datetime = Field(sa_column=Column(pg.TIMESTAMP(timezone=True), default=datetime.now(timezone.utc)))
     order_status: order_status_type = Field(
         default=order_status_type.NOT_ACTIVE
     )

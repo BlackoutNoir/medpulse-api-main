@@ -84,5 +84,6 @@ class PatientResponse(PatientBase):
     }
 
 
-
-
+class PatientFilter(PatientBase):
+    address: Optional[str] 
+    order_by: Optional[str]

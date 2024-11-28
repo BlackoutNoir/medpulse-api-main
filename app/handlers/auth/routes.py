@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, HTTPException, status, Depends
 from app.handlers.auth.schemas import UserCreate, UserResponse, UserLogin
 from app.handlers.auth.repo import AuthRepo
 from app.handlers.auth.service import AuthService

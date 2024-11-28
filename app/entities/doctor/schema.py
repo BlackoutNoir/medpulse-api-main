@@ -42,3 +42,4 @@ class DoctorFilter(BaseModel):
     qualifications: Optional[List[str]] = None
     years_of_experience: Optional[int] = None
     enable_online_appointments: Optional[bool] = None
+    order_by: Optional[str] = None
