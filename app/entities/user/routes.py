@@ -11,8 +11,8 @@ user_router = APIRouter()
 repo = UserRepo()
 
 @user_router.get("/", response_model=List[UserResponse], status_code=status.HTTP_200_OK)
-# async def get_all_users(session: db_session,   user_details: access_token_bearer, role_checker: view_role_checker):
-async def get_all_users(session: db_session):
+async def get_all_users(session: db_session,   user_details: access_token_bearer):
+# async def get_all_users(session: db_session):
     return await repo.get_all_users(session)
 
 @user_router.get("/{user_id}", response_model=UserResponse, status_code=status.HTTP_200_OK)
