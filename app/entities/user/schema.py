@@ -17,6 +17,10 @@ class UserBase(BaseModel):
     is_active: bool = True
     user_type: UserType
     gender: Optional[gender_type] = None
+    country: Optional[str] = None
+    city: Optional[str]  = None
+    street_address: Optional[str] = None 
+    zip_code: Optional[str]  = None
 
 
 
@@ -124,3 +128,10 @@ class UserFilter(UserBase):
     date_of_birth: Optional[date] = None
     created_at: Optional[date] = None
     order_by: Optional[str] = None
+
+#nested 
+class UserNested(UserBase):
+    uid: uuid.UUID
+    model_config = {
+        "from_attributes": True
+    }

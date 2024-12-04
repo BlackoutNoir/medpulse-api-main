@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 from typing import Optional, List
 import uuid
-
+from app.entities.staff.schema import StaffNested
 
 # Base models
 class DoctorBase(BaseModel):
@@ -28,7 +28,7 @@ class DoctorUpdate(DoctorBase):
 # response models
 class DoctorResponse(DoctorBase):
     uid: uuid.UUID
-
+    staff: StaffNested
     model_config = {
         "from_attributes": True
     }

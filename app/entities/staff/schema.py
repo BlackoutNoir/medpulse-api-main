@@ -2,6 +2,7 @@ from pydantic import BaseModel
 from typing import Optional, List
 import uuid
 from datetime import date, datetime
+from app.entities.user.schema import UserNested
 
 
 
@@ -10,8 +11,10 @@ class StaffBase(BaseModel):
     user_uid: uuid.UUID
     employment_date: date = date.today
     employed_until: Optional[date] = None
+    employment_type: str
     role_uid: uuid.UUID 
     department_uid: uuid.UUID 
+
 
 class ScheduleBase(BaseModel):
     uid: uuid.UUID 
@@ -55,6 +58,10 @@ class ScheduleResponse(ScheduleBase):
 class StaffResponse(StaffBase):
     uid: uuid.UUID
 
+    schedules = List[ScheduleResponse]
+
+    user: UserNested
+
     model_config = {
         "from_attributes": True
     }
@@ -69,3 +76,13 @@ class StaffFilter(BaseModel):
     role_uid: Optional[uuid.UUID] = None
     department_uid: Optional[uuid.UUID] = None
     order_by: Optional[str] = None
+
+#export
+class StaffNested(StaffBase):
+
+    uid: uuid.UUID
+    schedules = List[ScheduleResponse]
+    user: UserNested
+    model_config = {
+        "from_attributes": True
+    }

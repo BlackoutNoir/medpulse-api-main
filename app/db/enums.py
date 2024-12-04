@@ -94,6 +94,15 @@ class appointment_status_type(str, Enum):
     NO_SHOW = "NO_SHOW"
     PENDING = "PENDING"
 
+class employment_type(str, Enum):
+    FULL_TIME = "FULL_TIME"
+    PART_TIME = "PART_TIME"
+    CONTRACT = "CONTRACT"
+    TEMPORARY = "TEMPORARY"
+    INTERN = "INTERN"
+    VOLUNTEER = "VOLUNTEER"
+    OTHER = "OTHER"
+
 
 
 

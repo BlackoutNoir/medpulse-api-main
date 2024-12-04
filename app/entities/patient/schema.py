@@ -1,7 +1,9 @@
 from pydantic import BaseModel
 from typing import Optional, List
 import uuid
+from datetime import date
 from app.db.enums import blood_type as BloodType
+from app.entities.user.schema import UserNested
 
 
 class MedicalHistoryBase(BaseModel):
@@ -32,7 +34,7 @@ class PatientBase(BaseModel):
 
     uid: uuid.UUID 
     user_uid: uuid.UUID 
-    address: Optional[str] 
+    las_visit: Optional[date] = None
 
 
 #Creation
@@ -78,6 +80,8 @@ class PatientResponse(PatientBase):
     lab_tests: List[LabTestBase]
     prescriptions: List[PrescriptionBase]
     bills: List[BillBase]
+
+    user: UserNested
 
     model_config = {
         "from_attributes": True

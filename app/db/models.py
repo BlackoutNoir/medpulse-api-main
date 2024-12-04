@@ -16,7 +16,8 @@ from app.db.enums import (
     lab_test_status,
     lab_test_type,
     order_status_type,
-    blood_type as BloodType
+    blood_type as BloodType,
+    employment_type as EmploymentType
 )
 
 
@@ -46,6 +47,11 @@ class User(SQLModel, table=True):
     last_login: datetime = Field(sa_column=Column(pg.TIMESTAMP(timezone=True), default=datetime.now(timezone.utc)))
     password_hash: str = Field(exclude=True)
     image_url: str = Field(default=None, nullable=True)
+
+    country: Optional[str] = Field(default=None, nullable=True)
+    city: Optional[str] = Field(default=None, nullable=True)
+    street_address: Optional[str] = Field(default=None, nullable=True)
+    zip_code: Optional[str] = Field(default=None, nullable=True)
 
     user_type: UserType = Field(
         nullable=False
@@ -235,6 +241,12 @@ class Staff(SQLModel, table=True):
     employment_date: date
     employed_until: Optional[date] = None
 
+    # employment_type: EmploymentType
+    # need to reset migration cuz enums
+
+    employment_type: str
+    
+
     role_uid: uuid.UUID = Field(foreign_key="role.uid", nullable=False)
     department_uid: uuid.UUID = Field(foreign_key="department.uid", nullable=False)
 
@@ -320,6 +332,9 @@ class Doctor(SQLModel, table=True):
     qualifications: List[str] = Field(
         sa_column=Column(pg.JSON, nullable=True)  
     )
+    assigned_treatment_services: List[str] = Field(
+        sa_column=Column(pg.JSON, nullable=True)  
+    )
 
     years_of_experience: int
     enable_online_appointments : bool
@@ -344,9 +359,10 @@ class Patient(SQLModel, table=True):
     )
 
     user_uid: uuid.UUID = Field(foreign_key="medpulse_user.uid", nullable=False, unique=True)
-
     
-    address: Optional[str] = Field(default=None)
+    last_visit: Optional[date] = Field(default=None,nullable=True)
+    
+    # address: Optional[str] = Field(default=None)
 
     # Relationships
 
@@ -507,6 +523,7 @@ class Appointment(SQLModel, table=True):
         default=appointment_status_type.PENDING,
     )
     reason_for_visit: Optional[str] = Field(default=None)
+    medical_concern: Optional[str] = Field(default=None)
     location: str
     is_virtual: bool = Field(default=False)
     details: Optional[str] = Field(default=None)
